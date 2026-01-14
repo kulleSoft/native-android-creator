@@ -1,14 +1,14 @@
 import { useEffect, useRef } from 'react';
 import { useAppStore } from '@/store/appStore';
 
-// URLs de áudio gratuitos (loops ambientes)
+// URLs de áudio gratuitos (archive.org - domínio público)
 const audioUrls: Record<string, string> = {
-  rain: 'https://cdn.freesound.org/previews/531/531947_10537921-lq.mp3',
-  ocean: 'https://cdn.freesound.org/previews/457/457677_9395857-lq.mp3',
-  forest: 'https://cdn.freesound.org/previews/588/588302_7037-lq.mp3',
-  fire: 'https://cdn.freesound.org/previews/499/499826_10779674-lq.mp3',
-  wind: 'https://cdn.freesound.org/previews/406/406087_5121236-lq.mp3',
-  whitenoise: 'https://cdn.freesound.org/previews/561/561401_8037758-lq.mp3',
+  rain: 'https://upload.wikimedia.org/wikipedia/commons/4/4f/Rain.ogg',
+  ocean: 'https://upload.wikimedia.org/wikipedia/commons/5/53/Ocean_waves%2C_bofill.ogg',
+  forest: 'https://upload.wikimedia.org/wikipedia/commons/4/4e/Forest_ambiance.ogg',
+  fire: 'https://upload.wikimedia.org/wikipedia/commons/6/6d/Fireplace.ogg',
+  wind: 'https://upload.wikimedia.org/wikipedia/commons/0/08/Wind_sounds.ogg',
+  whitenoise: 'https://upload.wikimedia.org/wikipedia/commons/2/2e/White_noise.ogg',
 };
 
 export const useAudioPlayer = () => {
