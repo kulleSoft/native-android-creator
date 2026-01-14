@@ -124,7 +124,7 @@
   }
 
   .content-area {
-    @apply flex-1 overflow-y-auto hide-scrollbar px-4 pb-24;
+    @apply flex-1 overflow-y-auto hide-scrollbar px-4 pb-28;
   }
 }
 
