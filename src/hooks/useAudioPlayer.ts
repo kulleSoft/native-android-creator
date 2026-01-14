@@ -1,55 +1,48 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import { useAppStore } from '@/store/appStore';
 import { AudioGenerator } from '@/utils/audioGenerator';
 
+type AudioControls = {
+  start: () => void;
+  stop: () => void;
+  setVolume: (vol: number) => void;
+};
+
 export const useAudioPlayer = () => {
-  const { sounds, timerEndTime, stopAllSounds } = useAppStore();
-  const soundsRef = useRef(sounds);
+  const sounds = useAppStore((state) => state.sounds);
+  const timerEndTime = useAppStore((state) => state.timerEndTime);
+  const stopAllSounds = useAppStore((state) => state.stopAllSounds);
+  
   const audioGenerator = useRef<AudioGenerator | null>(null);
-  const audioControls = useRef<
-    Map<string, { start: () => void; stop: () => void; setVolume: (vol: number) => void }>
-  >(new Map());
+  const audioControls = useRef<Map<string, AudioControls>>(new Map());
+  const initialized = useRef(false);
 
-  // keep latest sounds for event handlers
+  // Initialize audio generator once
   useEffect(() => {
-    soundsRef.current = sounds;
-  }, [sounds]);
-
-  // Initialize audio generator
-  useEffect(() => {
+    if (initialized.current) return;
+    initialized.current = true;
+    
     audioGenerator.current = new AudioGenerator();
 
-    soundsRef.current.forEach((sound) => {
-      const controls = audioGenerator.current!.generateSound(sound.id);
-      audioControls.current.set(sound.id, controls);
+    // Create controls for each sound
+    ['rain', 'ocean', 'forest', 'fire', 'wind', 'whitenoise'].forEach((id) => {
+      const controls = audioGenerator.current!.generateSound(id);
+      audioControls.current.set(id, controls);
     });
 
-    // Android/iOS: precisa de gesto do usuário para liberar áudio
+    // Unlock audio on first user interaction (required for mobile)
     const unlockAudio = async () => {
       await audioGenerator.current?.resume();
-      // re-aplica estado após "unlock"
-      soundsRef.current.forEach((sound) => {
-        const controls = audioControls.current.get(sound.id);
-        if (!controls) return;
-        if (sound.isPlaying) {
-          controls.start();
-          controls.setVolume(sound.volume);
-        }
-      });
-      window.removeEventListener('pointerdown', unlockAudio);
-      window.removeEventListener('touchstart', unlockAudio);
+      document.removeEventListener('touchstart', unlockAudio);
+      document.removeEventListener('click', unlockAudio);
     };
 
-    window.addEventListener('pointerdown', unlockAudio, { once: true } as any);
-    window.addEventListener('touchstart', unlockAudio, { once: true } as any);
+    document.addEventListener('touchstart', unlockAudio, { once: true });
+    document.addEventListener('click', unlockAudio, { once: true });
 
     return () => {
-      window.removeEventListener('pointerdown', unlockAudio);
-      window.removeEventListener('touchstart', unlockAudio);
-      audioControls.current.forEach((controls) => {
-        controls.stop();
-      });
-      audioControls.current.clear();
+      document.removeEventListener('touchstart', unlockAudio);
+      document.removeEventListener('click', unlockAudio);
     };
   }, []);
 
@@ -59,10 +52,9 @@ export const useAudioPlayer = () => {
       const controls = audioControls.current.get(sound.id);
       if (!controls) return;
 
-      controls.setVolume(sound.isPlaying ? sound.volume : 0);
-      
       if (sound.isPlaying) {
         controls.start();
+        controls.setVolume(sound.volume);
       } else {
         controls.stop();
       }
