@@ -1,10 +1,13 @@
 import { ArrowLeft, Clock, Star, FileText, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useState } from 'react';
 import { useAppStore } from '@/store/appStore';
+import { PrivacyPolicyModal } from '@/components/PrivacyPolicyModal';
 import bgNight from '@/assets/bg-night.jpg';
 
 export const SettingsPage = () => {
   const { setActiveTab, timerMinutes } = useAppStore();
+  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
 
   const settingsItems = [
     {
@@ -21,9 +24,9 @@ export const SettingsPage = () => {
     },
     {
       icon: FileText,
-      label: 'Política de Privacidade',
+      label: 'Termos e Privacidade',
       value: '',
-      action: () => {},
+      action: () => setShowPrivacyModal(true),
     },
   ];
 
@@ -94,6 +97,12 @@ export const SettingsPage = () => {
           </motion.div>
         </div>
       </div>
+
+      {/* Privacy Policy Modal */}
+      <PrivacyPolicyModal 
+        isOpen={showPrivacyModal} 
+        onClose={() => setShowPrivacyModal(false)} 
+      />
     </div>
   );
 };
