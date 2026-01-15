@@ -1,4 +1,4 @@
-import { ArrowLeft, Clock, Star, FileText, Video, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Clock, Star, FileText, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAppStore } from '@/store/appStore';
 import bgNight from '@/assets/bg-night.jpg';
@@ -91,24 +91,6 @@ export const SettingsPage = () => {
                 </motion.button>
               );
             })}
-          </motion.div>
-
-          {/* Offline Mode */}
-          <motion.div 
-            className="glass-card p-4 mt-4 flex items-center justify-between"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
-                <Video className="w-5 h-5 text-primary" />
-              </div>
-              <div>
-                <p className="text-foreground font-medium">Modo Offline</p>
-                <p className="text-muted-foreground text-sm">Assista vídeo para ativar</p>
-              </div>
-            </div>
           </motion.div>
         </div>
       </div>
