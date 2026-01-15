@@ -1,4 +1,4 @@
-import { ArrowLeft, Clock, Bell, Star, FileText, Video, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Clock, Star, FileText, Video, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAppStore } from '@/store/appStore';
 import bgNight from '@/assets/bg-night.jpg';
@@ -11,12 +11,6 @@ export const SettingsPage = () => {
       icon: Clock,
       label: 'Timer Padrão',
       value: timerMinutes ? `${timerMinutes} Minutos` : '30 Minutos',
-      action: () => {},
-    },
-    {
-      icon: Bell,
-      label: 'Notificações',
-      value: 'Ativadas',
       action: () => {},
     },
     {
