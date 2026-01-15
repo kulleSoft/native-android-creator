@@ -1,11 +1,17 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef } from 'react';
 import { useAppStore } from '@/store/appStore';
 import { AudioGenerator } from '@/utils/audioGenerator';
+import rainSound from '@/assets/sounds/rain.mp3';
 
 type AudioControls = {
   start: () => void;
   stop: () => void;
   setVolume: (vol: number) => void;
+};
+
+// Sounds that use real audio files
+const audioFiles: Record<string, string> = {
+  rain: rainSound,
 };
 
 export const useAudioPlayer = () => {
@@ -15,6 +21,7 @@ export const useAudioPlayer = () => {
   
   const audioGenerator = useRef<AudioGenerator | null>(null);
   const audioControls = useRef<Map<string, AudioControls>>(new Map());
+  const audioElements = useRef<Map<string, HTMLAudioElement>>(new Map());
   const initialized = useRef(false);
 
   // Initialize audio generator once
@@ -26,8 +33,26 @@ export const useAudioPlayer = () => {
 
     // Create controls for each sound
     ['rain', 'ocean', 'forest', 'fire', 'wind', 'study', 'birds'].forEach((id) => {
-      const controls = audioGenerator.current!.generateSound(id);
-      audioControls.current.set(id, controls);
+      // Check if this sound has a real audio file
+      if (audioFiles[id]) {
+        const audio = new Audio(audioFiles[id]);
+        audio.loop = true;
+        audio.volume = 0.5;
+        audioElements.current.set(id, audio);
+        
+        audioControls.current.set(id, {
+          start: () => audio.play().catch(console.error),
+          stop: () => {
+            audio.pause();
+            audio.currentTime = 0;
+          },
+          setVolume: (vol: number) => { audio.volume = vol; },
+        });
+      } else {
+        // Use synthetic sound
+        const controls = audioGenerator.current!.generateSound(id);
+        audioControls.current.set(id, controls);
+      }
     });
 
     // Unlock audio on first user interaction (required for mobile)
