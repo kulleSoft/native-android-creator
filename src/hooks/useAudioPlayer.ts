@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useAppStore } from '@/store/appStore';
 import { AudioGenerator } from '@/utils/audioGenerator';
 import rainSound from '@/assets/sounds/rain.mp3';
+import forestSound from '@/assets/sounds/forest.mp3';
 
 type AudioControls = {
   start: () => void;
@@ -12,6 +13,7 @@ type AudioControls = {
 // Sounds that use real audio files
 const audioFiles: Record<string, string> = {
   rain: rainSound,
+  forest: forestSound,
 };
 
 export const useAudioPlayer = () => {
