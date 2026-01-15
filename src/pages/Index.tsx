@@ -1,17 +1,14 @@
 import { useAppStore } from '@/store/appStore';
 import { BottomNav } from '@/components/BottomNav';
+import { AudioPlayer } from '@/components/AudioPlayer';
 import { HomePage } from '@/pages/HomePage';
 import { MixerPage } from '@/pages/MixerPage';
 import { FavoritesPage } from '@/pages/FavoritesPage';
 import { SettingsPage } from '@/pages/SettingsPage';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useAudioPlayer } from '@/hooks/useAudioPlayer';
 
 const Index = () => {
-  const { activeTab } = useAppStore();
-  
-  // Initialize audio player
-  useAudioPlayer();
+  const activeTab = useAppStore((state) => state.activeTab);
 
   const renderPage = () => {
     switch (activeTab) {
@@ -30,6 +27,8 @@ const Index = () => {
 
   return (
     <div className="h-screen w-full max-w-md mx-auto bg-background overflow-hidden">
+      <AudioPlayer />
+
       <AnimatePresence mode="wait">
         <motion.div
           key={activeTab}
@@ -48,3 +47,4 @@ const Index = () => {
 };
 
 export default Index;
+
