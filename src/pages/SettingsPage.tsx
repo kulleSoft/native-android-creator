@@ -23,7 +23,7 @@ export const SettingsPage = () => {
       icon: Star,
       label: 'Avalie o App',
       value: 'Deixe sua avaliação!',
-      action: () => {},
+      action: () => window.open('https://play.google.com/store/apps/details?id=com.dreschdevapps.calmmusicnight', '_blank'),
     },
     {
       icon: FileText,
