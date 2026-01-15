@@ -5,7 +5,8 @@ import soundOcean from '@/assets/sound-ocean.jpg';
 import soundForest from '@/assets/sound-forest.jpg';
 import soundFire from '@/assets/sound-fire.jpg';
 import soundWind from '@/assets/sound-wind.jpg';
-import soundWhitenoise from '@/assets/sound-whitenoise.jpg';
+import soundStudy from '@/assets/sound-study.jpg';
+import soundBirds from '@/assets/sound-birds.jpg';
 
 const imageMap: Record<string, string> = {
   rain: soundRain,
@@ -13,7 +14,8 @@ const imageMap: Record<string, string> = {
   forest: soundForest,
   fire: soundFire,
   wind: soundWind,
-  whitenoise: soundWhitenoise,
+  study: soundStudy,
+  birds: soundBirds,
 };
 
 interface SoundCardProps {

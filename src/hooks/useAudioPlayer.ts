@@ -25,7 +25,7 @@ export const useAudioPlayer = () => {
     audioGenerator.current = new AudioGenerator();
 
     // Create controls for each sound
-    ['rain', 'ocean', 'forest', 'fire', 'wind', 'whitenoise'].forEach((id) => {
+    ['rain', 'ocean', 'forest', 'fire', 'wind', 'study', 'birds'].forEach((id) => {
       const controls = audioGenerator.current!.generateSound(id);
       audioControls.current.set(id, controls);
     });

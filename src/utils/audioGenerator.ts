@@ -208,28 +208,97 @@ export class AudioGenerator {
     };
   }
 
-  // Generate white noise
-  generateWhiteNoise(): { start: () => void; stop: () => void; setVolume: (vol: number) => void } {
+  // Generate study lofi ambience (soft pink noise + gentle tone)
+  generateStudy(): { start: () => void; stop: () => void; setVolume: (vol: number) => void } {
     const ctx = this.getContext();
     const gainNode = ctx.createGain();
     gainNode.connect(ctx.destination);
     gainNode.gain.value = 0;
 
+    // Soft pink noise for cozy ambience
     const bufferSize = 4096;
-    const whiteNoise = ctx.createScriptProcessor(bufferSize, 1, 1);
+    const noise = ctx.createScriptProcessor(bufferSize, 1, 1);
+    let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
     
-    whiteNoise.onaudioprocess = (e) => {
+    noise.onaudioprocess = (e) => {
       const output = e.outputBuffer.getChannelData(0);
       for (let i = 0; i < bufferSize; i++) {
-        output[i] = Math.random() * 2 - 1;
+        const white = Math.random() * 2 - 1;
+        b0 = 0.99886 * b0 + white * 0.0555179;
+        b1 = 0.99332 * b1 + white * 0.0750759;
+        b2 = 0.96900 * b2 + white * 0.1538520;
+        b3 = 0.86650 * b3 + white * 0.3104856;
+        b4 = 0.55000 * b4 + white * 0.5329522;
+        b5 = -0.7616 * b5 - white * 0.0168980;
+        output[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) * 0.05;
+        b6 = white * 0.115926;
       }
     };
 
-    whiteNoise.connect(gainNode);
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.value = 600;
+    
+    noise.connect(filter);
+    filter.connect(gainNode);
 
     return {
-      start: () => gainNode.gain.value = 0.3,
+      start: () => gainNode.gain.value = 0.25,
       stop: () => gainNode.gain.value = 0,
+      setVolume: (vol: number) => gainNode.gain.value = vol * 0.25,
+    };
+  }
+
+  // Generate birds chirping
+  generateBirds(): { start: () => void; stop: () => void; setVolume: (vol: number) => void } {
+    const ctx = this.getContext();
+    const gainNode = ctx.createGain();
+    gainNode.connect(ctx.destination);
+    gainNode.gain.value = 0;
+
+    let isRunning = false;
+    let timeoutId: number | null = null;
+
+    const createChirp = () => {
+      if (!isRunning) return;
+      
+      const osc = ctx.createOscillator();
+      const oscGain = ctx.createGain();
+      
+      osc.type = 'sine';
+      const baseFreq = 2500 + Math.random() * 1500;
+      osc.frequency.setValueAtTime(baseFreq, ctx.currentTime);
+      osc.frequency.linearRampToValueAtTime(baseFreq + 500, ctx.currentTime + 0.08);
+      osc.frequency.linearRampToValueAtTime(baseFreq - 200, ctx.currentTime + 0.15);
+      
+      oscGain.gain.setValueAtTime(0, ctx.currentTime);
+      oscGain.gain.linearRampToValueAtTime(0.15, ctx.currentTime + 0.03);
+      oscGain.gain.linearRampToValueAtTime(0.08, ctx.currentTime + 0.1);
+      oscGain.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.18);
+      
+      osc.connect(oscGain);
+      oscGain.connect(gainNode);
+      
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.2);
+      
+      // Random interval between chirps
+      timeoutId = window.setTimeout(createChirp, 800 + Math.random() * 2000);
+    };
+
+    return {
+      start: () => {
+        gainNode.gain.value = 0.3;
+        if (!isRunning) {
+          isRunning = true;
+          createChirp();
+        }
+      },
+      stop: () => {
+        gainNode.gain.value = 0;
+        isRunning = false;
+        if (timeoutId) clearTimeout(timeoutId);
+      },
       setVolume: (vol: number) => gainNode.gain.value = vol * 0.3,
     };
   }
@@ -241,8 +310,9 @@ export class AudioGenerator {
       case 'forest': return this.generateForest();
       case 'fire': return this.generateFire();
       case 'wind': return this.generateWind();
-      case 'whitenoise': return this.generateWhiteNoise();
-      default: return this.generateWhiteNoise();
+      case 'study': return this.generateStudy();
+      case 'birds': return this.generateBirds();
+      default: return this.generateStudy();
     }
   }
 }
