@@ -80,22 +80,31 @@ export class AudioGenerator {
     filter.frequency.value = 700;
 
     // Slow swell (LFO) modulates gain
-    const lfo = ctx.createOscillator();
+    let lfo: OscillatorNode | null = null;
     const lfoGain = ctx.createGain();
-    lfo.type = 'sine';
-    lfo.frequency.value = 0.12;
     lfoGain.gain.value = 0.35;
-    lfo.connect(lfoGain);
     lfoGain.connect(outGain.gain);
 
     noise.connect(filter);
     filter.connect(outGain);
 
-    lfo.start();
+    let isStarted = false;
 
     return {
-      start: () => (outGain.gain.value = 0.25),
-      stop: () => (outGain.gain.value = 0),
+      start: () => {
+        outGain.gain.value = 0.25;
+        if (!isStarted) {
+          isStarted = true;
+          lfo = ctx.createOscillator();
+          lfo.type = 'sine';
+          lfo.frequency.value = 0.12;
+          lfo.connect(lfoGain);
+          lfo.start();
+        }
+      },
+      stop: () => {
+        outGain.gain.value = 0;
+      },
       setVolume: (vol: number) => (outGain.gain.value = vol * 0.25),
     };
   }
