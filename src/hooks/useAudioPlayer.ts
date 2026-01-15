@@ -3,6 +3,7 @@ import { useAppStore } from '@/store/appStore';
 import { AudioGenerator } from '@/utils/audioGenerator';
 import rainSound from '@/assets/sounds/rain.mp3';
 import forestSound from '@/assets/sounds/forest.mp3';
+import birdsSound from '@/assets/sounds/birds.mp3';
 
 type AudioControls = {
   start: () => void;
@@ -14,6 +15,7 @@ type AudioControls = {
 const audioFiles: Record<string, string> = {
   rain: rainSound,
   forest: forestSound,
+  birds: birdsSound,
 };
 
 export const useAudioPlayer = () => {
