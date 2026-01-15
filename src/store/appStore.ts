@@ -39,7 +39,8 @@ const initialSounds: Sound[] = [
   { id: 'forest', name: 'Floresta', icon: '🌲', image: 'forest', volume: 0.5, isPlaying: false },
   { id: 'fire', name: 'Fogueira', icon: '🔥', image: 'fire', volume: 0.5, isPlaying: false },
   { id: 'wind', name: 'Vento', icon: '💨', image: 'wind', volume: 0.5, isPlaying: false },
-  { id: 'whitenoise', name: 'Ruído Branco', icon: '📊', image: 'whitenoise', volume: 0.5, isPlaying: false },
+  { id: 'study', name: 'Estudo', icon: '📚', image: 'study', volume: 0.5, isPlaying: false },
+  { id: 'birds', name: 'Pássaros', icon: '🐦', image: 'birds', volume: 0.5, isPlaying: false },
 ];
 
 export const useAppStore = create<AppState>((set, get) => ({

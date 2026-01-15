@@ -9,7 +9,8 @@ const iconMap: Record<string, string> = {
   forest: '🌲',
   fire: '🔥',
   wind: '💨',
-  whitenoise: '📊',
+  study: '📚',
+  birds: '🐦',
 };
 
 interface SoundMixerItemProps {
