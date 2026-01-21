@@ -28,7 +28,10 @@ export const SoundMixerItem = ({ sound }: SoundMixerItemProps) => {
       transition={{ duration: 0.3 }}
     >
       <button
-        onClick={() => toggleSound(sound.id)}
+        onClick={() => {
+          console.log('🎵 MixerItem toggle:', sound.id, '| playing:', !sound.isPlaying);
+          toggleSound(sound.id);
+        }}
         className={`w-10 h-10 rounded-full flex items-center justify-center text-lg transition-all ${
           sound.isPlaying 
             ? 'bg-primary/20 ring-2 ring-primary' 
@@ -51,7 +54,10 @@ export const SoundMixerItem = ({ sound }: SoundMixerItemProps) => {
       </div>
 
       <button
-        onClick={() => toggleSound(sound.id)}
+        onClick={() => {
+          console.log('🔇 MixerItem volume toggle:', sound.id);
+          toggleSound(sound.id);
+        }}
         className="p-2"
       >
         {sound.isPlaying && sound.volume > 0 ? (

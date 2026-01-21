@@ -64,6 +64,7 @@ export const SoundGrid = () => {
   const { sounds, toggleSound, setActiveTab } = useAppStore();
 
   const handleToggle = (id: string) => {
+    console.log('🔊 SoundCard toggle:', id);
     toggleSound(id);
   };
 
